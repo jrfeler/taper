@@ -2,6 +2,7 @@
   "name": "grommet-test",
   "version": "1.0.0",
   "description": "test file for grommet components",
+  "homepage": "/taper",
   "main": "server.js",
   "engines": {
     "node": ">=7.5.0"
