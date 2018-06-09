@@ -1,0 +1,23 @@
+new Map([
+[  ['Morphine Extended Release',[15,30,45,60,90,100,120,180,200,300]],
+  ['Morphine Immediate Release',[7.5,15,22.5,30,45]],
+  ['Oxycodone Immediate Release',[2.5,5,10,15,30,60]],
+  ['Oxycodone/Acetaminophen Immediate Release',['5/325','7.5/325','10/325']],
+  ['Oxycodone Extended Release',[10,15,20,30,40,45,60,80,160]],
+  ['Hydrocodone/Acetaminophen',['5/325','7.5/325','10/325']],
+  ['Hydromorphone',[2,4,6,8]],
+  ['Methadone',[5,7.5,10,15,20,25,30,35,40,45,50,55,60,65]],
+  ['Fentanyl Transdermal Patch',[12,25,50,75,100]],
+  ['Tramadol',[25,50,100]],
+  ['Codeine/Acetaminophin',['15/300','30/300','60/300']],
+  ['Codeine',[15,30,60]]]
+]);
+
+
+{"value":0,"label":'Morphine Extended Release'}, {'value':1,'label':'Morphine Immediate Release'}, {'value':2,'label':'Oxycodone Immediate Release'}, {'value':3,'label':'Oxycodone Extended Release'}, {'value':4,'label':'Oxycodone/Acetaminophen Immediate Release'}, {'value':5,'label':'Hydrocodone/Acetaminophen'}, {'value':6,'label':'Hydromorphone'}, {'value':7,'label':'Methadone'}, {'value':8,'label':'Fentanyl Transdermal Patch'}, {'value':9,'label':'Tramadol'}, {'value':10,'label':'Codeine/Acetaminophen'}, {'value':11,'label': 'Codeine'}
+
+if (newState.length >= 1) {
+  this.medListRend = newState.map((drug) => <li>{this.drug} </li>);
+} else {
+  this.medListRend = {}
+};
