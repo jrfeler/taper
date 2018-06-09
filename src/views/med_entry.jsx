@@ -81,7 +81,7 @@ export default class MedEntry extends Component {
     this.setState({medList: newState});
     if (newState.length >= 1) {
       this.medListRend = newState.map(drug => <RegimenEntry key={drug} drugIndex={drug} removeDrug={this.removeDrug}></RegimenEntry>);
-      this.medListChecks = newState.map(drug => <Checkbox key={drug} label={this.drugNames[drug]}/>);
+      this.medListChecks = newState.map(drug => <CheckBox key={drug} label={this.drugNames[drug]}/>);
     } else {
       this.medListRend = [];
       this.medListChecks = [];
