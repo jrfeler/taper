@@ -11,7 +11,7 @@ class Layout extends React.Component {
   render() {
     return(
       <App centered={true}><MainRouter/></App>)
-        
+  
       }
 }
 
