@@ -1,7 +1,7 @@
 var config = {
-  entry: './src/main.js', // entry point
+  entry: './src/index.js', // entry point
   output: {
-    filename: 'index.js', // place where bundled app will be served
+    filename: 'serve.js', // place where bundled app will be served
      publicPath: '/',
   },
   devServer: {
