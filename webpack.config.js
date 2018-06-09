@@ -2,7 +2,8 @@ var config = {
   entry: './src/index.js', // entry point
   output: {
     filename: 'index.js', // place where bundled app will be served
-     publicPath: '/',
+     publicPath: '/'
+
   },
   devServer: {
     inline: true, // autorefresh
