@@ -1,4 +1,5 @@
-import React, {Component} from "react";
+import React from 'react';
+import Component from 'react';
 import Header from 'grommet/components/Header'
 import Article from 'grommet/components/Article'
 import Section from 'grommet/components/Section'
@@ -16,7 +17,7 @@ import Button from 'grommet/components/Button'
 import RegimenEntry from '../components/RegimenEntry.jsx'
 import * as MedData from '../med_data.js'
 
-export default class MedEntry extends Component {
+export default class MedEntry extends React.Component {
   constructor(props) {
     super(props);
     this.drugNames = MedData.drugData;
@@ -62,7 +63,8 @@ export default class MedEntry extends Component {
     this.state = {
       medList: [],
       firstMed: null,
-      doseList: []
+      doseList: [],
+      taperPace: null,
     }
     this.medListRend = [];
     this.medListChecks = [];
@@ -86,10 +88,11 @@ export default class MedEntry extends Component {
       this.medListRend = [];
       this.medListChecks = [];
     };
-    if (this.state.medList.length = 1) {
-      this.state.firstMed = this.state.medList[0];
-    } else {
-      this.state.firstMed = null;
+    if(newState.length > 1 || newState.length === 0) {
+      this.setState({firstMed:null})
+    }
+    else {
+      this.setState({firstMed:ind})
     }
   }
 
@@ -99,7 +102,6 @@ export default class MedEntry extends Component {
       newState = this.state.medList.concat(val.value.value);
     } else {
       newState = this.state.medList;
-
       newState.splice(newState.indexOf(val.value.value), 1);
     }
     this.setState({medList: newState});
@@ -110,6 +112,12 @@ export default class MedEntry extends Component {
       this.medListRend = [];
       this.medListChecks = [];
     };
+
+  }
+
+  selectTaperPace(val) {
+    console.log(val);
+    this.setState({taperPace: val})
   }
 
   render() {
@@ -127,7 +135,7 @@ export default class MedEntry extends Component {
       </Section>
       {
         this.state.medList.length > 0
-          ? <Section >
+          ? <Section pad='medium'>
               <Columns pad='medium'>
                 {this.medListRend}
               </Columns>
@@ -149,29 +157,29 @@ export default class MedEntry extends Component {
             </Section>
           : null
       }
-    {this.state.medList.length > 1
+    {this.state.medList.length > 0
         ?
-      <Section >
+      <Section>
         <Box pad='medium' justify={'start'}>
           <Title>
             How fast would you like to taper?
           </Title>
-          <Paragraph>Faster schedules may be more difficult but will end sooner.</Paragraph>
+          <Paragraph>Do we have any data comparing rates? </Paragraph>
           <Columns>
-            <Card contentPad={'medium'} heading={'Fast'} label={'rate'} description={'Doses will decrease by 10% for each step.'} className={'plan-card'} textSize={'small'}>
-              <Button label={'Select'}></Button>
+            <Card contentPad={'medium'} heading={'Slow'} label={'rate'} description={'Doses will decrease by 10% for each step.'} className={'plan-card'} textSize={'small'}>
+              <Button label={'Select'} onClick={ () => this.selectTaperPace(0)}></Button>
             </Card>
-            <Card contentPad={'medium'} heading={'Slow'} label={'rate'} description={'Doses will decrease by 20% for each step.'} className={'plan-card'} textSize={'small'}>
-              <Button label={'Select'}></Button>
+            <Card contentPad={'medium'} heading={'Slower'} label={'rate'} description={'Doses will decrease by 20% for each step.'} className={'plan-card'} textSize={'small'}>
+              <Button label={'Select'} onClick={() => this.selectTaperPace(1)}></Button>
             </Card>
 
           </Columns>
-
+          <Paragraph>{this.state.taperPace}</Paragraph>
         </Box>
       </Section>
       :null}
       <Footer>
-        Filler Text
+
       </Footer>
 
     </div>);

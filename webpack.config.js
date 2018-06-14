@@ -1,8 +1,8 @@
 var config = {
-  entry: './src/index.js', // entry point
+  entry: './index.js', // entry point
   output: {
-    filename: 'index.js', // place where bundled app will be served
-     publicPath: '/'
+    filename: './src/index.js', // place where bundled app will be served
+    publicPath: '/'
 
   },
   devServer: {
@@ -10,15 +10,11 @@ var config = {
     historyApiFallback: true,
     port: 8080 // development port server
   },
+  resolve: {
+    extensions: [".js", ".jsx"]
+  },
   module: {
-    rules: [{
-        exclude: /node_modules/,
-        test: /\.js/,
-        use: [{
-          loader: 'babel-loader'
-        }]
-      },
-      {
+    loaders: [{
         test: /\.scss$/,
         use: [{
             loader: 'style-loader'
@@ -35,15 +31,19 @@ var config = {
         ]
       },
       {
-        test: /\.jsx?$/, // search for js files
+        test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'babel-loader',
+        use: "babel-loader"
+      }, {
+        test: /\.jsx?$/, // Match both .js and .jsx files
+        exclude: /node_modules/,
+        loader: "babel-loader",
         query: {
-          presets: ['es2015', 'react'] // use es2015 and react
+          presets: ['react', 'es2015']
         }
-      }
-    ]
-  }
+    }
+  ]
+}
 
 }
 module.exports = config;

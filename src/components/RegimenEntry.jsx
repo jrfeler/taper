@@ -1,7 +1,7 @@
 import React from 'react';
+import Component from 'react';
 import CheckBox from 'grommet/components/CheckBox';
 import Paragraph from 'grommet/components/Paragraph';
-import NumberInput from 'grommet/components/NumberInput';
 import Select from 'grommet/components/Select';
 import Box from 'grommet/components/Box';
 import Card from 'grommet/components/Card';
@@ -74,7 +74,13 @@ export default class RegimenEntry extends React.Component {
           }
         </Box>
         <Button onClick={() => this.props.removeDrug(this.state.drugIndex)} label={'Remove'}></Button>
-
+        <Box justify={'end'}>
+          <Paragraph>Total per day: {
+              this.state.doses.reduce(function(acc, val) {
+                return acc + val;
+              })
+            }</Paragraph>
+        </Box>
       </Card>
     </div>)
   }
