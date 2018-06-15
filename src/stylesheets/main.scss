@@ -16,6 +16,17 @@ gen-card {
 
 }
 
+.header-bar {
+  background-color: #eeeeee;
+
+}
+
+.route-btn-container{
+  a {
+    padding-left: 10px;
+  }
+}
+
 .plan-card {
   @extend gen-card;
 
@@ -24,4 +35,10 @@ gen-card {
 
 .wait{
   opacity: 50%;
+}
+
+.grommetux-select{
+  input{
+  background-color: #fff;
+  }
 }

@@ -13,6 +13,18 @@ gen-card, .med-entry-card, .plan-card {
   width: 150px;
 }
 
+.header-bar {
+  background-color: #eeeeee;
+}
+
+.route-btn-container a {
+  padding-left: 10px;
+}
+
 .wait {
   opacity: 50%;
+}
+
+.grommetux-select input {
+  background-color: #fff;
 }

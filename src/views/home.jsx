@@ -9,10 +9,9 @@ class Home extends React.Component {
    render() {
       return (
         <div>
-        <Header fixed={true}><h1>Bup App</h1></Header>
-          <Header>
+        
             <h1>Check In</h1>
-          </Header>
+
         <Button  critical={true} label='Enter New Med'/>
         <Box align='center' flex={true} separator='vertical'>
          </Box>

@@ -73,7 +73,7 @@ export default class RegimenEntry extends React.Component {
               : null
           }
         </Box>
-        <Button onClick={() => this.props.removeDrug(this.state.drugIndex)} label={'Remove'}></Button>
+        <Button onClick={() => this.props.removeDrug(this.state.drugIndex)} label={'Remove'} primary={true}></Button>
         <Box justify={'end'}>
           <Paragraph>Total per day: {
               this.state.doses.reduce(function(acc, val) {
