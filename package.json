@@ -1,8 +1,8 @@
 {
-  "name": "grommet-test",
+  "name": "taper-test",
   "version": "1.0.0",
-  "description": "test file for grommet components",
-  "homepage": "/taper",
+  "description": "test file for taper components",
+  "homepage": "http://jrfeler.github.io/taper/",
   "main": "./src/index.js",
   "engines": {
     "node": ">=7.5.0"
@@ -10,7 +10,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack-dev-server --hot",
-    "build": "webpack -d",
+    "build": "webpack --config webpack.config.js -d && react-scripts build",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
