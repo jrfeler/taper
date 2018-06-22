@@ -17,12 +17,12 @@ const MainRouter = () => (<BrowserRouter>
         <Title>Bup App</Title>
         <Box className='route-btn-container' flex={true} direction={'row'} justify={'end'} align={'center'}>
 
+          <Link to={{
+              pathname: '/'
+            }}>Home</Link>
       <Link to={{
           pathname: '/med_entry'
         }}>Med Entry</Link>
-      <Link to={{
-          pathname: '/'
-        }}>Home</Link>
       <Link to={{
           pathname: '/checkin'
         }}>Check In</Link>

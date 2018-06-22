@@ -14,69 +14,76 @@ export default class RegimenEntry extends React.Component {
     super(props);
     this.drugNames = MedData.drugData;
     this.doseData = MedData.doseData;
-
+    var initToggle = [
+      false, false, false, false
+    ];
+    for(var i=0; i < 4; i++) {
+      if(this.props.doses[i] != 0) {
+        initToggle[i]= true;
+      }
+    }
     this.state = {
-      drugIndex: this.props.drugIndex,
-      times: [
-        false, false, false, false
-      ],
-      doses: [0, 0, 0, 0]
+      times: initToggle
     }
   }
 
   toggleDrugtime(ind) {
     var newState = this.state.times;
     newState[ind] = !newState[ind];
-    var newStateDose = this.state.doses;
+    var newStateDose = this.props.doses;
     newStateDose[ind] = 0;
-    this.setState({times: newState, doses: newStateDose})
+    this.setState({times: newState})
+    this.props.setDrugDose(this.props.drugIndex,newStateDose);
   }
 
-  setDrugDose(val) {
+  selectDrugDoseHandler(val) {
     var ind = parseInt(val.target.id);
-    var newState = this.state.doses;
+    var newState = this.props.doses;
     newState[ind] = val.value;
     this.setState({doses: newState});
+    this.props.setDrugDose(this.props.drugIndex,this.props.doses);
   }
 
   render() {
-    return (<div>
+
+    return (
+      <div>
       <Card contentPad={'medium'} className={'med-entry-card'}>
         <Title>
-          {this.drugNames[this.state.drugIndex]}</Title>
+          {this.drugNames[this.props.drugIndex]}</Title>
         <Paragraph>When do you take this medication?</Paragraph>
         <Box direction={'row'} className="time-enter-container" justify={'between'}>
-          <CheckBox label='Morning' value={this.state.times[0]} onClick={() => this.toggleDrugtime(0)}/> {
+          <CheckBox label='Morning' checked={this.state.times[0]} onChange={() => this.toggleDrugtime(0)}/> {
             this.state.times[0]
-              ? <Select id={0} placeHolder={'0'} options={this.doseData[this.state.drugIndex]} value={this.state.doses[0]} onChange={this.setDrugDose.bind(this)}/>
+              ? <Select id={0} placeHolder={'0'} options={this.doseData[this.props.drugIndex]} value={this.props.doses[0]} onChange={this.selectDrugDoseHandler.bind(this)}/>
               : null
           }
         </Box>
         <Box direction={'row'} className="time-enter-container" justify={'between'}>
-          <CheckBox label='Noon' value={this.state.times[1]} onClick={() => this.toggleDrugtime(1)}/> {
+          <CheckBox label='Noon' checked={this.state.times[1]} onChange={() => this.toggleDrugtime(1)}/> {
             this.state.times[1]
-              ? <Select id={1} placeHolder={'0'} options={this.doseData[this.state.drugIndex]} value={this.state.doses[1]} onChange={this.setDrugDose.bind(this)}/>
+              ? <Select id={1} placeHolder={'0'} options={this.doseData[this.props.drugIndex]} value={this.props.doses[1]} onChange={this.selectDrugDoseHandler.bind(this)}/>
               : null
           }
         </Box>
         <Box direction={'row'} className="time-enter-container" justify={'between'}>
-          <CheckBox label='Evening' value={this.state.times[2]} onClick={() => this.toggleDrugtime(2)}/> {
+          <CheckBox label='Evening' checked={this.state.times[2]} onChange={() => this.toggleDrugtime(2)}/> {
             this.state.times[2]
-              ? <Select id={2} placeHolder={'0'} options={this.doseData[this.state.drugIndex]} value={this.state.doses[2]} onChange={this.setDrugDose.bind(this)}/>
+              ? <Select id={2} placeHolder={'0'} options={this.doseData[this.props.drugIndex]} value={this.props.doses[2]} onChange={this.selectDrugDoseHandler.bind(this)}/>
               : null
           }
         </Box>
         <Box direction={'row'} className="time-enter-container" justify={'between'}>
-          <CheckBox label='Night' value={this.state.times[3]} onClick={() => this.toggleDrugtime(3)}/> {
+          <CheckBox label='Night' checked={this.state.times[3]} onChange={() => this.toggleDrugtime(3)}/> {
             this.state.times[3]
-              ? <Select id={3} placeHolder={'0'} options={this.doseData[this.state.drugIndex]} value={this.state.doses[3]} onChange={this.setDrugDose.bind(this)}/>
+              ? <Select id={3} placeHolder={'0'} options={this.doseData[this.props.drugIndex]} value={this.props.doses[3]} onChange={this.selectDrugDoseHandler.bind(this)}/>
               : null
           }
         </Box>
-        <Button onClick={() => this.props.removeDrug(this.state.drugIndex)} label={'Remove'} primary={true}></Button>
+        <Button onClick={() => this.props.removeDrug(this.props.drugIndex)} label={'Remove'} primary={true}></Button>
         <Box justify={'end'}>
           <Paragraph>Total per day: {
-              this.state.doses.reduce(function(acc, val) {
+              this.props.doses.reduce(function(acc, val) {
                 return acc + val;
               })
             }</Paragraph>
