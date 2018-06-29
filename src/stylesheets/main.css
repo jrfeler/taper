@@ -28,3 +28,29 @@ gen-card, .med-entry-card, .plan-card {
 .grommetux-select input {
   background-color: #fff;
 }
+
+input {
+  background-color: #fff;
+}
+
+td .grommetux-select {
+  width: 150px;
+}
+
+td .grommetux-date-time__input {
+  width: 140px;
+  background-color: #fff;
+}
+
+td span.grommetux-number-input {
+  display: inline-flex;
+}
+
+td span.grommetux-number-input input {
+  width: 70px;
+  background-color: #fff;
+}
+
+td button {
+  width: 30px;
+}

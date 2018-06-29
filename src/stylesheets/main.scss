@@ -7,21 +7,21 @@ gen-card {
 
 .med-entry-card {
   @extend gen-card;
-  .time-enter-container{
+
+  .time-enter-container {
     height: 60px;
-    .grommetux-select{
+
+    .grommetux-select {
       width: 150px;
     }
   }
-
 }
 
 .header-bar {
   background-color: #eeeeee;
-
 }
 
-.route-btn-container{
+.route-btn-container {
   a {
     padding-left: 10px;
   }
@@ -29,16 +29,41 @@ gen-card {
 
 .plan-card {
   @extend gen-card;
+}
 
-  }
-
-
-.wait{
+.wait {
   opacity: 50%;
 }
 
-.grommetux-select{
-  input{
+.grommetux-select {
+  input {
+    background-color: #fff;
+  }
+}
+
+input {
   background-color: #fff;
+}
+
+
+td {
+  .grommetux-select {
+    width: 150px;  
+  }
+   .grommetux-date-time__input {
+    width: 140px;
+      background-color: #fff;
+  }
+  span.grommetux-number-input {
+    display: inline-flex;
+    input {
+      width: 70px;
+        background-color: #fff;
+    }
+  }
+
+
+  button {
+    width: 30px;
   }
 }

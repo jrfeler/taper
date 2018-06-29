@@ -1,6 +1,7 @@
 import React from 'react';
 import Home from './views/home.jsx';
 import MedEntry from './views/med_entry.jsx';
+import MedEntry2 from './views/med_entry2.jsx';
 import Checkin from './views/checkin.jsx';
 import {BrowserRouter, Link} from 'react-router-dom';
 import {Route} from 'react-router';
@@ -14,26 +15,30 @@ const MainRouter = () => (<BrowserRouter>
     <div className="route-btn-container">
       <Header className='header-bar'>
         <Box flex={true} direction={'row'} justify={'between'} pad={'medium'} align={'center'}>
-        <Title>Bup App</Title>
-        <Box className='route-btn-container' flex={true} direction={'row'} justify={'end'} align={'center'}>
+          <Title>Bup App</Title>
+          <Box className='route-btn-container' flex={true} direction={'row'} justify={'end'} align={'center'}>
 
-          <Link to={{
-              pathname: '/'
-            }}>Home</Link>
-      <Link to={{
-          pathname: '/med_entry'
-        }}>Med Entry</Link>
-      <Link to={{
-          pathname: '/checkin'
-        }}>Check In</Link>
-    </Box>
+            <Link to={{
+                pathname: '/'
+              }}>Home</Link>
+            <Link to={{
+                pathname: '/med_entry'
+              }}>Med Entry</Link>
+              <Link to={{
+                  pathname: '/med_entry2'
+                }}>Med Entry 2</Link>
+            <Link to={{
+                pathname: '/checkin'
+              }}>Check In</Link>
+          </Box>
         </Box>
-    </Header>
+      </Header>
     </div>
     <div>
       <Route path='/med_entry' component={MedEntry}/>
       <Route exact={true} path='/' component={Home}/>
       <Route path='/checkin' component={Checkin}/>
+      <Route path='/med_entry2' component={MedEntry2}/>
     </div>
   </div>
 </BrowserRouter>);

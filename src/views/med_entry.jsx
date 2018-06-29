@@ -83,15 +83,15 @@ export default class MedEntry extends React.Component {
 
   }
 
-  generateFirstDrugRadio(drugs, selected) {
-    var buttons = drugs.map((drug) => <RadioButton key={drug} id={'drug' + drug} value={drug.toString()} label={this.drugNames[drug]} checked={selected === drug} onChange={() => this.setFirstMed(drug)}/>)
-    return (<FormField >{buttons}</FormField>)
-  };
-
   setFirstMed(med) {
     this.medListChecks = this.generateFirstDrugRadio(this.state.medList, med)
     this.setState({firstMed: this.state.medList.indexOf(med), firstDose: -1})
   }
+
+  generateFirstDrugRadio(drugs, selected) {
+    var buttons = drugs.map((drug) => <RadioButton key={drug} id={'drug' + drug} value={drug.toString()} label={this.drugNames[drug]} checked={selected === drug} onChange={() => this.setFirstMed(drug)}/>)
+    return (<FormField >{buttons}</FormField>)
+  };
 
   setDrugChoice(val) {
     var newMedList = null;
