@@ -196,9 +196,10 @@ export default class MedEntry2 extends React.Component {
 
   render() {
     return (<div>
-      <Header>
-        <h1>Medication Entry</h1>
-      </Header>
+      <Section pad={'medium'
+        }>
+          <h1>Medication Entry</h1>
+      </Section>
       <Section >
         <Box pad='medium' justify={'start'}>
           <Title>

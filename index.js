@@ -9,7 +9,7 @@ import './src/stylesheets/main.scss';
 class Layout extends React.Component {
   render() {
     return (
-      <App centered={true}><MainRouter/></App>
+      <App centered={false}><MainRouter/></App>
     )
   }
 }

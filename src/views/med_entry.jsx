@@ -292,7 +292,6 @@ export default class MedEntry extends React.Component {
       }
       {this.firstDoseSelector()}
       {this.taperPaceSelector()}
-      <Paragraph>{this.state.taperPace}, first: {this.state.firstMed}, drugs: {this.state.medList}, doses: {this.state.doseList}</Paragraph>
       <Footer>
 
         {this.taperSchedulePrint()}

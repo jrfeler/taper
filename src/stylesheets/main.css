@@ -1,8 +1,14 @@
-gen-card, .med-entry-card, .plan-card {
+.gen-card, .med-entry-card, .plan-card {
   margin: 10px;
   background-color: #f0f0f0;
   border-radius: 5px;
   box-shadow: 3px 3px 5px #c8c8c8;
+}
+
+.gen-card Label, .med-entry-card Label, .plan-card Label {
+  color: #969696;
+  margin-bottom: 0px;
+  margin-top: 0px;
 }
 
 .med-entry-card .time-enter-container {
@@ -53,4 +59,25 @@ td span.grommetux-number-input input {
 
 td button {
   width: 30px;
+}
+
+.home-medlist {
+  width: 100%;
+}
+
+.quote-marker {
+  position: absolute;
+  font-size: 70pt;
+  color: rgba(200, 30, 40, 0.5);
+  font-style: italic;
+}
+
+.quote-marker:first-of-type {
+  left: -50px;
+  top: -20px;
+}
+
+.quote-marker:last-of-type {
+  bottom: -70px;
+  right: -20px;
 }

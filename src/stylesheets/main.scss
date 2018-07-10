@@ -1,16 +1,19 @@
-gen-card {
+.gen-card {
   margin: 10px;
   background-color: rgb(240,240,240);
   border-radius: 5px;
   box-shadow: 3px 3px 5px rgb(200,200,200);
+  Label {
+    color: rgb(150,150,150);
+    margin-bottom: 0px;
+    margin-top: 0px;
+  }
 }
 
 .med-entry-card {
-  @extend gen-card;
-
+  @extend .gen-card;
   .time-enter-container {
     height: 60px;
-
     .grommetux-select {
       width: 150px;
     }
@@ -28,7 +31,7 @@ gen-card {
 }
 
 .plan-card {
-  @extend gen-card;
+  @extend .gen-card;
 }
 
 .wait {
@@ -48,7 +51,7 @@ input {
 
 td {
   .grommetux-select {
-    width: 150px;  
+    width: 150px;
   }
    .grommetux-date-time__input {
     width: 140px;
@@ -65,5 +68,27 @@ td {
 
   button {
     width: 30px;
+  }
+}
+
+.home-medlist {
+  width: 100%;
+}
+
+.quote-marker {
+  position: absolute;
+
+  font-size: 70pt;
+  color: rgba(200,30,40,.5);
+
+  font-style: italic;
+  &:first-of-type {
+    left: -50px;
+    top: -20px;
+  }
+  &:last-of-type{
+    bottom: -70px;
+    right: -20px;
+
   }
 }
