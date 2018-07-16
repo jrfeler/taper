@@ -2,6 +2,7 @@ import React from 'react';
 import Home from './views/home.jsx';
 import MedEntry from './views/med_entry.jsx';
 import MedEntry2 from './views/med_entry2.jsx';
+import MedEntry3 from './views/med_entry3.jsx';
 import Checkin from './views/checkin.jsx';
 import Onboard from './views/onboard.jsx';
 import Landing from './views/landing.jsx';
@@ -62,7 +63,10 @@ export default class MainRouter extends React.Component {
               }}>Med Entry</Link>
             <Link to={{
                 pathname: '/med_entry2'
-              }}>Med Entry 2</Link>
+              }}>Med Entry V2</Link>
+              <Link to={{
+                  pathname: '/med_entry3'
+                }}>Med Entry V3</Link>
             <Link to={{
                 pathname: '/checkin'
               }}>Check In</Link>
@@ -95,6 +99,7 @@ export default class MainRouter extends React.Component {
             <Route path='/med_entry' component={MedEntry}/>
             <Route path='/checkin' component={Checkin}/>
             <Route path='/med_entry2' component={MedEntry2}/>
+            <Route path='/med_entry3' component={MedEntry3}/>
             <Route path='/onboard' component={Onboard}/>
             <Route path='/' exact={true} component={Landing}/>
             <Route path='/home' component={Home}/>
