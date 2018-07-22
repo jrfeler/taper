@@ -101,7 +101,7 @@ export default class MainRouter extends React.Component {
             <Route path='/med_entry2' component={MedEntry2}/>
             <Route path='/med_entry3' component={MedEntry3}/>
             <Route path='/onboard' component={Onboard}/>
-            <Route path='/' exact={true} component={Landing}/>
+            <Route path='/taper' exact={true} component={Landing}/>
             <Route path='/home' component={Home}/>
           </Box>
         </Box>

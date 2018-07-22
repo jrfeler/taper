@@ -23,7 +23,6 @@ import Label from 'grommet/components/Label'
 import NumberInput from 'grommet/components/NumberInput'
 import List from 'grommet/components/List'
 import ListItem from 'grommet/components/ListItem'
-import Notification from 'grommet/components/Notification'
 
 import Select from 'react-select'
 
@@ -82,8 +81,9 @@ export default class MedEntry3 extends React.Component {
         []
       ],
       keyMax: 0,
-      step: 0,
-      showCompNotification: false
+      chips: [],
+      chipPlaceholder: "Begin typing medication names here:",
+      step: 0
     }
     this.medListRend = [];
     this.medListChecks = [];
@@ -92,28 +92,34 @@ export default class MedEntry3 extends React.Component {
     this.updateDose = this.updateDose.bind(this);
     this.deleteDose = this.deleteDose.bind(this);
     this.deleteMed = this.deleteMed.bind(this);
+    this.chipChange = this.chipChange.bind(this);
   }
 
   deleteMed(medInd) {
     var newDoseList = this.state.doseList.filter((dose) => dose.med != medInd);
-    var newMedList = this.state.medList.filter(med => med.value != medInd);
+    var newMedList = this.state.medList.filter(med => med != medInd);
     this.setState({doseList: newDoseList, medList: newMedList});
   }
 
-  toggleMed(med) {
-    if (this.state.medList.includes(med)) {
-      this.deleteMed(med.value)
-    } else {
-      var newMedList = this.state.medList.concat(med);
-      this.initDose(med.value);
-      this.setState({medList: newMedList})
-    }
+  chipChange(chips) {
+    var placeHolder = chips.length < 1
+      ? 'Begin typing medication names here:'
+      : 'Continue typing other medication names here:';
+      if(chips.length < this.state.chips.lenght) {
+        //chip remove
+        var removed = this.state.chips.filter(x => !chips.includes(x));
+        this.deleteMed(removed.value)
+
+      } else {
+        //chip added, no need to edit dose list
+      }
+    this.setState({chips: chips, chipPlaceholder: placeHolder})
   }
 
   generateMedSelectList() {
     var div = null;
-    div = this.drugOptions.map((med) => <CheckBox key={med.value} id={'drug' + med.value} checked={this.state.medList.includes(med)} label={med.label} onChange={() => this.toggleMed(med)}/>)
-    return <Columns>{div}</Columns>;
+    div = this.drugNames.map((med) => <CheckBox key={med} id={'drug' + med} value={med.toString()} label={med.toString()} onChange={() => this.setFirstMed(med)}/>)
+    return <Columns masonry{true}>{div}</Columns>;
   }
 
   setKeyMax() {
@@ -152,18 +158,19 @@ export default class MedEntry3 extends React.Component {
   updateDoseCount(val) {
     var med = parseInt(val.target.name.slice(4));
     var dosesOfDrug = this.state.doseList.filter(dose => dose.med === med);
-    if (val.target.valueAsNumber > dosesOfDrug.length) {
+    if(val.target.valueAsNumber>dosesOfDrug.length) {
       this.initDose(med);
-    } else {
-      this.deleteDose(dosesOfDrug[dosesOfDrug.length - 1].key)
+    }
+    else {
+      this.deleteDose(dosesOfDrug[dosesOfDrug.length-1].key)
     }
   }
 
   generateDoseDayInput() {
     var div = null;
-    div = this.state.medList.map((med) => <Box direction={'column'} key={'pdaybox' + med.value}>
+    div = this.state.chips.map((med) => <Box direction={'column'} key={'pdaybox' + med.label}>
       <Paragraph>{med.label}</Paragraph>
-      <NumberInput id={'pday' + med.label} min={0} name={'pday' + med.value} value={this.state.doseList.filter(dose => dose.med === med.value).length} step={1} onChange={(val) => this.updateDoseCount(val)}></NumberInput>
+      <NumberInput id={'pday' + med.label} min={0} name={'pday' + med.value} value={this.state.doseList.filter(dose=> dose.med===med.value).length} step={1} onChange={(val) => this.updateDoseCount(val)}></NumberInput>
     </Box>)
     return <Box>{div}</Box>
   }
@@ -181,26 +188,28 @@ export default class MedEntry3 extends React.Component {
   generateRegEntryCards() {
     var div = null;
     if (this.state.doseList.length > 0) {
-      div = this.state.medList.map((med, index) => <RegimenEntry3 key={index} medIndex={med.value} doses={this.state.doseList.filter(dose => dose.med === med.value)} updateDose={this.updateDose}></RegimenEntry3>)
-      return (<Box>{div}</Box>);
+      div = this.state.chips.map((med, index) => <RegimenEntry3 key={index} medIndex={med.value} doses={this.state.doseList.filter(dose => dose.med === med.value)} updateDose={this.updateDose}></RegimenEntry3>)
+      return (<Columns justify={'start'} responsive={true} size={'large'}>
+        {div}
+      </Columns>);
     } else {
       return div;
     }
   }
 
-  generateRegimenSummary() {
-    var div = this.state.medList.length >= 1
-      ? this.state.medList.map((med,index) => <div key={index}>
-        <Paragraph>{med.label}</Paragraph>
-        <List className={'home-medlist'}>
 
-          {
-            this.state.doseList.filter(dose => dose.med === med.value).map((dose) => <ListItem key={dose.key}>{dose.nPills}
-              x {dose.pillDose}
-              mg tabs at {dose.time}</ListItem>)
-          }
-        </List>
-      </div>)
+
+
+
+  generateRegimenSummary() {
+    var div = this.state.chips.length >= 1
+      ? this.state.chips.map((med) => <div>
+      <Paragraph>{med.label}</Paragraph>
+      <List className={'home-medlist'}>
+
+        {this.state.doseList.filter(dose=> dose.med === med.value).map((dose) => <ListItem>{dose.nPills} x {dose.pillDose} mg tabs at {dose.time}</ListItem>)}
+      </List></div>
+    )
       : <Label className={'warn-text'}>As you enter you medication schedule, it will appear here so that you can review it.</Label>
     return <Box>{div}</Box>;
   }
@@ -221,42 +230,16 @@ export default class MedEntry3 extends React.Component {
     })
   }
 
-  stepComplete() {
-    switch(this.state.step) {
-      case 0:
-        return this.state.medList.length > 0;
-      default:
-        return true;
-    }
-  }
-
-  handleNextClick() {
-    if(this.stepComplete()) {
-      this.setState({showCompNotification:false})
-      this.nextStep();
-    }
-    else{
-      this.setState({showCompNotification:true})
-
-    }
-
-  }
-
   render() {
-    return (<div>
-      <Section className={'page-title'} pad={'medium'}>
-        <h1 >Medication Entry</h1>
+    return (
+
+      <div>
+      <Section pad={'medium'}>
+        <h1>Medication Entry</h1>
         <Paragraph>In this page, you will enter all the information about your pain medications, including how much you take and when.</Paragraph>
       </Section>
-
-      <Columns justify={'start'} masonry={true} maxCount={2}>
-        <Box size={'xlarge'}>
-          <Box direction={'row'} pad={'medium'} justify={'between'} basis={'full'}>
-            <Button onClick={() => this.lastStep()} label={'Back'}></Button>
-            <Button onClick={() => this.handleNextClick()} label={'Next'}></Button>
-          </Box>
-          {this.state.showCompNotification ? <Notification message='Please select a medication before continuing.' size='small'status='critical'/>:null}
-
+      <Columns size={'large'} justify={'between'}>
+        <Box>
           <Animate visible={this.state.step === 0} enter={{
               "animation" : "fade",
               "duration" : 300,
@@ -264,10 +247,20 @@ export default class MedEntry3 extends React.Component {
             }} keep={false}>
 
             <Box justify={'start'} margin={'medium'}>
+              <Box justify={'between'}>
+                <Title>Select Your Medications</Title>
+                <Paragraph>If you take multiple opioid medications, please include all of them. To enter a second medication, begin typing the name of the second medication after entering the first.</Paragraph>
+              </Box>
+              <Button onClick={() => this.openPillIdentifierTab()} label={'What is this pill?'} box={true} alignSelf={'end'} primary={true} margin={'small'}></Button>
+              <Select value={this.state.chips} multi={true} options={this.drugOptions} onChange={this.chipChange} suggestions={this.drugNames} placeholder={this.state.chipPlaceholder}/>
+
+            </Box>
+
+            <Box justify={'start'} margin={'medium'}>
               <Title>
                 Select All Your Medications
               </Title>
-              <Paragraph>If you take multiple opioid medications, please check each of them.</Paragraph>
+              <Paragraph>If you take multiple opioid medications, please click each of them.</Paragraph>
               <Button onClick={() => this.openPillIdentifierTab()} label={'What is this pill?'} box={true} alignSelf={'end'} primary={true} margin={'small'}></Button>
               {this.generateMedSelectList()}
             </Box>
@@ -278,7 +271,7 @@ export default class MedEntry3 extends React.Component {
               "delay" : 0
             }} keep={false}>
             <Box margin={'medium'}>
-              <Title>Enter How many times you take each medication per day</Title>
+              <Paragraph>Enter How many times you take each medication per day</Paragraph>
               {this.generateDoseDayInput()}
             </Box>
           </Animate>
@@ -287,17 +280,21 @@ export default class MedEntry3 extends React.Component {
               "duration" : 300,
               "delay" : 0
             }} keep={false}>
-            <Box justify={'start'} margin={'medium'}>
-            <Title>Enter specifics of each dose:</Title>
+            <Paragraph>Enter specifics of each dose</Paragraph>
             <Box>
               {this.generateRegEntryCards()}
             </Box>
-          </Box>
           </Animate>
-        </Box>
-        <Box className={'gen-card'} margin={'medium'} pad={'medium'} >
 
-          <h2>Med Regimen Summary</h2>
+          <Box direction={'row'}>
+            <Button onClick={() => this.lastStep()} label={'Last'}></Button>
+            <Button onClick={() => this.nextStep()} label={'Next'}></Button>
+          </Box>
+
+        </Box>
+        <Box className={'gen-card'} margin={'medium'} pad={'medium'}>
+
+          <h2>Med Regimen</h2>
           {this.generateRegimenSummary()}
         </Box>
       </Columns>

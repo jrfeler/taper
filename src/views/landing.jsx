@@ -33,7 +33,7 @@ export default class Landing extends React.Component {
       <Columns size='medium' maxCount={4} justify='start'>
         <Box align={'start'} pad={'medium'} margin={'medium'} colorIndex='light-2' className={'gen-card'}>
           <h3>New Patient</h3>
-          <Button label={'Start'} href={'/'}></Button>
+          <Button label={'Start'} href={'/med_entry3'}></Button>
         </Box>
         <Box align={'start'} pad={'medium'} margin={'medium'} colorIndex='light-2' className={'gen-card'}>
           <h3>Existing Patient</h3>
