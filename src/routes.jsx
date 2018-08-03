@@ -6,7 +6,7 @@ import MedEntry3 from './views/med_entry3.jsx';
 import Checkin from './views/checkin.jsx';
 import Onboard from './views/onboard.jsx';
 import Landing from './views/landing.jsx';
-import {BrowserRouter, Link} from 'react-router-dom';
+import {HashRouter, Link} from 'react-router-dom';
 import {Route} from 'react-router';
 import Header from 'grommet/components/Header';
 import Title from 'grommet/components/Title';
@@ -35,7 +35,8 @@ export default class MainRouter extends React.Component {
   }
 
   renderMenuButton() {
-    if(window.location.pathname==='/') {
+
+    if(window.location.hash==='#/') {
       return null;
     }
     if (!this.state.showSidebar) {
@@ -53,7 +54,6 @@ export default class MainRouter extends React.Component {
           <Title>Taper App</Title>
         </Header>
         <Box flex='grow' justify='start'>
-
           <Menu primary={true}>
             <Link to={{
                 pathname: '/home'
@@ -86,7 +86,7 @@ export default class MainRouter extends React.Component {
     return div;
   }
   render() {
-    return (<BrowserRouter>
+    return (<HashRouter>
       <Split separator={true} flex='right' showOnResponsive={'both'}>
         {this.renderMenu()}
         <Box flex={'grow'}>
@@ -101,11 +101,11 @@ export default class MainRouter extends React.Component {
             <Route path='/med_entry2' component={MedEntry2}/>
             <Route path='/med_entry3' component={MedEntry3}/>
             <Route path='/onboard' component={Onboard}/>
-            <Route path='/taper' exact={true} component={Landing}/>
+            <Route path='/' exact={true} component={Landing}/>
             <Route path='/home' component={Home}/>
           </Box>
         </Box>
       </Split>
-    </BrowserRouter>)
+    </HashRouter>)
   }
 };

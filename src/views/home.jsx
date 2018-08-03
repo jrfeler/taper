@@ -43,7 +43,7 @@ class Home extends React.Component {
             </List>
 
             <Box alignContent={'end'} alignSelf={'end'} flex={true} pad={'small'}>
-              <Button label={'New Regimen'} icon={<CaretNext/>} href={'/med_entry3'} primary={true}></Button>
+              <Button label={'New Regimen'} icon={<CaretNext/>} href={'/#/med_entry3'} primary={true}></Button>
             </Box>
           </Box>
           <Box align='start' pad='medium' colorIndex='light-2' className={'gen-card'}>

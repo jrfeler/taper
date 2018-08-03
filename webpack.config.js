@@ -5,6 +5,7 @@ var config = {
     publicPath: '/'
 
   },
+
   devServer: {
     inline: true, // autorefresh
     historyApiFallback: true,
@@ -13,6 +14,12 @@ var config = {
   resolve: {
     extensions: [".js", ".jsx"]
   },
+  node: {
+    net: "empty",
+    tls: "empty",
+    fs: 'empty'
+  },
+
   module: {
     loaders: [{
         test: /\.scss$/,
