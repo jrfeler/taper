@@ -144,7 +144,7 @@ class Checkin extends React.Component {
               </ListItem>
             </List>
             <Box alignContent={'end'} alignSelf={'end'} flex={true} margin={'medium'}>
-              <Button label={'Update Regimen'} href={'/#/med_entry3'} primary={true} plain={true}></Button>
+              <Button label={'Update Regimen'} href={'/taper/#/med_entry3'} primary={true} plain={true}></Button>
             </Box>
           </Box>
           <Paragraph>This regimen is what I am taking now.</Paragraph>

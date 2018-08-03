@@ -33,13 +33,13 @@ export default class Landing extends React.Component {
       <Columns size='medium' maxCount={4} justify='start'>
         <Box align={'start'} pad={'medium'} margin={'medium'} colorIndex='light-2' className={'gen-card'}>
           <h3>New Patient</h3>
-          <Button label={'Start'} href={'/#/med_entry3'}></Button>
+          <Button label={'Start'} href={'/taper/#/med_entry3'}></Button>
         </Box>
         <Box align={'start'} pad={'medium'} margin={'medium'} colorIndex='light-2' className={'gen-card'}>
           <h3>Existing Patient</h3>
           <Box direction={'row'}>
             <TextInput id={'patient_id'} name={'patient_id'} placeHolder={'Patient ID'}></TextInput>
-            <Button icon={<CaretNext/>} href={'/#/home'}/>
+            <Button icon={<CaretNext/>} href={'/taper/#/home'}/>
           </Box>
       </Box>
       </Columns>
