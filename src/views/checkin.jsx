@@ -8,7 +8,6 @@ import Section from 'grommet/components/Section';
 import NumberInput from 'grommet/components/NumberInput';
 import Layer from 'grommet/components/Layer';
 import Article from 'grommet/components/Article';
-import CheckBox from 'grommet/components/CheckBox';
 import Title from 'grommet/components/Title';
 import Animate from 'grommet/components/Animate';
 import Columns from 'grommet/components/Columns';
@@ -16,24 +15,61 @@ import Down from 'grommet/components/icons/base/Down';
 import List from 'grommet/components/List';
 import ListItem from 'grommet/components/ListItem';
 import Label from 'grommet/components/Label';
+import CaretNext from 'grommet/components/icons/base/CaretNext';
 import Tabletop from 'tabletop';
+import MedSummary from '../components/MedSummary.jsx';
+import RadioButton from 'grommet/components/RadioButton';
+
+import * as MedData from '../med_data.js'
 
 class Checkin extends React.Component {
   constructor(props) {
     super(props);
     var context = this;
     var fbData = Tabletop.init({key: 'https://docs.google.com/spreadsheets/d/19CJcyEiSPD4g7boOx6Xk8e6rV9NrJeptqMo-v-uVIzE/edit?usp=sharing', callback: this.readFBDataHelper, simpleSheet: true, callbackContext: context})
+    var dummyDoseList = [{
+      key: 1,
+      med: 1,
+      time: '8 am',
+      nPills: 2,
+      pillDose: 10
+    }, {
+      key: 2,
+      med: 2,
+      time: '8 pm',
+      nPills: 2,
+      pillDose: 10
+    }];
+    var dummyMedList = [{value:1,label:'Hydromorphone'},{value:2,label:'Oxycodone'}];
+
     this.state = {
       showVid: false,
       continueTaper: 0,
       fbText: null,
       fbSwitch: 0,
       fbShow: null,
-      showDoseEditor: false
+      showDoseEditor: false,
+      step: 0,
+      doseList: dummyDoseList,
+      medList: dummyMedList,
+      taperDose: null,
+      taperRate: -1,
+      pFBText: MedData.positiveFBText[Math.floor(Math.random()*MedData.positiveFBText.length)]
     }
     this.setFeedbackSwitch = this.setFeedbackSwitch.bind(this);
     this.toggleCustomFeedback = this.toggleCustomFeedback.bind(this);
 
+  }
+  nextStep() {
+    this.setState({
+      step: this.state.step + 1
+    });
+  }
+
+  lastStep() {
+    this.setState({
+      step: this.state.step - 1
+    });
   }
 
   readFBDataHelper(data, tabletop) {
@@ -71,7 +107,11 @@ class Checkin extends React.Component {
             ? <Layer closer={true} onClose={() => this.toggleCustomFeedback(index)}>
                 <Article>
                   <div className={'quote-marker left'}>"</div>
-                  <Paragraph>{fb.feedback.split("\\n").map((p,key)=>{return(<span key={key}>{p}<br/></span>)})}</Paragraph>
+                  <Paragraph>{
+                      fb.feedback.split("\\n").map((p, key) => {
+                        return (<span key={key}>{p}<br/></span>)
+                      })
+                    }</Paragraph>
                   <div className={'quote-marker right'}>"</div>
 
                 </Article>
@@ -119,55 +159,97 @@ class Checkin extends React.Component {
     this.setState({fbShow: newState});
   }
 
+  setTaperDose(val) {
+    this.setState({taperDose: val});
+  }
+
+  setTaperRate(val) {
+    this.setState({taperRate: val});
+  }
+
+  generateTaperSelector() {
+    var div = this.state.doseList.map((dose, index) => <RadioButton key={dose.key} id={'dose' + dose.key} checked={this.state.taperDose === dose} label={MedData.drugData[dose.med] + ' at ' + dose.time} onChange={() => this.setTaperDose(dose)}/>)
+    return (<Box>{div}</Box>)
+  }
 
   render() {
     return (<div>
       <Box pad={'medium'}>
         <h1>Check In</h1>
-        <Section>
-          <Paragraph>This is the medication regimen that was most recently recommended to you:</Paragraph>
-          <Box align='start' pad='medium' colorIndex='light-2' className={'gen-card'} alignContent={'stretch'}>
-            <Label>
-              From your last check in on 9/9/17:</Label>
-            <List className={'home-medlist'}>
-              <ListItem justify={'between'}>
-                <b>Oxycodone</b>
-                <span>5mg at 8AM</span>
-              </ListItem>
-              <ListItem justify={'between'}>
-                <span></span>
-                <span>5mg at 8PM</span>
-              </ListItem>
-              <ListItem justify={'between'}>
-                <b>Hydromorphone</b>
-                <span>25mg at 10AM</span>
-              </ListItem>
-            </List>
-            <Box alignContent={'end'} alignSelf={'end'} flex={true} margin={'medium'}>
-              <Button label={'Update Regimen'} href={'/taper/#/med_entry3'} primary={true} plain={true}></Button>
+
+        <Animate visible={this.state.step === 0} enter={{
+            "animation" : "fade",
+            "duration" : 300,
+            "delay" : 0
+          }} keep={false}>
+          <Box>
+            <Paragraph>This is the medication regimen that was most recently recommended to you:</Paragraph>
+              <MedSummary doseList={this.state.doseList} medList={this.state.medList} updateable={true}></MedSummary>
+
             </Box>
-          </Box>
-          <Paragraph>This regimen is what I am taking now.</Paragraph>
+            <Box alignContent={'end'} alignSelf={'end'}  flex={true} margin={'medium'}>
+              <Button label={'This is a correct list of the medications that I am taking now'} icon={<CaretNext/>} onClick={() => this.nextStep()} primary={true} plain={true}></Button>
+            </Box>
 
-          {
-            this.state.showVid
-              ? <Layer overlayClose={true}>
-                  <Article>
-                    <iframe id="ytplayer" type="text/html" width="500" height="280" src="https://www.youtube.com/embed/M7lc1UVf-VE?autoplay=1&origin=http://example.com" frameBorder="0"></iframe>
-                    <Button label={'Close'} primary={true} onClick={() => this.toggleVidLayer()}></Button>
-                  </Article>
-                </Layer>
-              : null
-          }
-          <Paragraph>
-            Do you have any concerns about continuing to slowly taper your opioid medications?</Paragraph>
-          <Box direction={'row'}>
-            <Button label={'No'} onClick={() => this.setFeedbackSwitch(1)}></Button>
-            <Button label={'Yes'} onClick={() => this.setFeedbackSwitch(2)}></Button>
-          </Box>
-          {this.renderFeedback()}
+        </Animate>
 
-        </Section>
+        {
+          this.state.showVid
+            ? <Layer overlayClose={true}>
+                <Article>
+                  <iframe id="ytplayer" type="text/html" width="500" height="280" src="https://www.youtube.com/embed/M7lc1UVf-VE?autoplay=1&origin=http://example.com" frameBorder="0"></iframe>
+                  <Button label={'Close'} primary={true} onClick={() => this.toggleVidLayer()}></Button>
+                </Article>
+              </Layer>
+            : null
+        }
+
+
+
+        <Animate visible={this.state.step === 1} enter={{
+            "animation" : "fade",
+            "duration" : 300,
+            "delay" : 0
+          }} keep={false}>
+          <Box>
+            <Paragraph>
+              Do you have any concerns about continuing to slowly taper your opioid medications?</Paragraph>
+            <Box direction={'row'}>
+              <Button label={'No'} onClick={() => this.nextStep()}></Button>
+              <Button label={'Yes'} onClick={() => this.setFeedbackSwitch(2)}></Button>
+            </Box>
+            {this.renderFeedback()}
+          </Box>
+        </Animate>
+        <Animate visible={this.state.step === 2} enter={{
+            "animation" : "fade",
+            "duration" : 300,
+            "delay" : 0
+          }} keep={false}>
+          <Box>
+            <Paragraph>Which dose would you like to reduce next?</Paragraph>
+            {this.generateTaperSelector()}
+            <Paragraph>Would you like to at a slow rate or the slowest rate?</Paragraph>
+            <Box>
+              <RadioButton id={'taper1'} checked={this.state.taperRate === 1} label={'Slow'} onChange={() => this.setTaperRate(1)}/>
+              <RadioButton id={'taper2'} checked={this.state.taperRate === 2} label={'Slower'} onChange={() => this.setTaperRate(2)}/>
+            </Box>
+            <Button label={'Next'} icon={<CaretNext/>} onClick={()=>this.nextStep()}/>
+          </Box>
+
+        </Animate>
+        <Animate visible={this.state.step === 3} enter={{
+            "animation" : "fade",
+            "duration" : 300,
+            "delay" : 0
+          }} keep={false}>
+          <Box>
+            <Paragraph>{this.state.pFBText}</Paragraph>
+            {this.state.taperDose != null ? <Paragraph>You should reduce your {this.state.taperDose.time} dose of {MedData.drugData[this.state.taperDose.med]} to {this.state.taperDose.nPills * this.state.taperDose.pillDose * .8} mg.</Paragraph> : null}
+          </Box>
+
+        </Animate>
+
       </Box>
     </div>);
   }

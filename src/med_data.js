@@ -13,3 +13,5 @@ export const doseData = [
   [15, 30, 60],
   [15, 30, 60]
 ];
+
+export const positiveFBText = [ 'Congratulations on continuing to slowly taper!', 'Well done! Your target is in site.','Congratulations on your continued success tapering off your medications','I am impressed! Your determination is inspiring','Congrats! You are continuing to move towards your goal.'];
