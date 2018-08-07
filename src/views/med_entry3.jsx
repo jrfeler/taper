@@ -25,7 +25,6 @@ import List from 'grommet/components/List'
 import ListItem from 'grommet/components/ListItem'
 import Notification from 'grommet/components/Notification'
 
-import Select from 'react-select'
 
 import * as MedData from '../med_data.js'
 

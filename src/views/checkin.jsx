@@ -58,6 +58,7 @@ class Checkin extends React.Component {
     }
     this.setFeedbackSwitch = this.setFeedbackSwitch.bind(this);
     this.toggleCustomFeedback = this.toggleCustomFeedback.bind(this);
+    this.updateDose = this.updateDose.bind(this);
 
   }
   nextStep() {
@@ -78,6 +79,17 @@ class Checkin extends React.Component {
     this.setState({fbText: data, fbShow: initFBShow});
   }
 
+  updateDose(dose) {
+    var newDoseList = this.state.doseList;
+    for (var i = 0; i < newDoseList.length; i++) {
+      if (newDoseList[i].key === dose.key) {
+        newDoseList[i] = dose;
+      }
+    }
+    this.setState({doseList: newDoseList})
+  }
+
+
   setFeedbackSwitch(val) {
     this.setState({fbSwitch: val})
   }
@@ -87,6 +99,7 @@ class Checkin extends React.Component {
       showVid: !this.state.showVid
     });
   }
+
 
   toggleCustomFeedback(ind) {
     var newState = this.state.fbShow;
@@ -129,6 +142,8 @@ class Checkin extends React.Component {
     </Box>);
 
   }
+
+
 
   renderFeedback() {
     switch (this.state.fbSwitch) {
@@ -184,7 +199,7 @@ class Checkin extends React.Component {
           }} keep={false}>
           <Box>
             <Paragraph>This is the medication regimen that was most recently recommended to you:</Paragraph>
-              <MedSummary doseList={this.state.doseList} medList={this.state.medList} updateable={true}></MedSummary>
+              <MedSummary doseList={this.state.doseList} medList={this.state.medList} updateable={true} updateDose={this.updateDose}></MedSummary>
 
             </Box>
             <Box alignContent={'end'} alignSelf={'end'}  flex={true} margin={'medium'}>
