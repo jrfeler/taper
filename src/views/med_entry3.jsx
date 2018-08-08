@@ -24,7 +24,7 @@ import NumberInput from 'grommet/components/NumberInput'
 import List from 'grommet/components/List'
 import ListItem from 'grommet/components/ListItem'
 import Notification from 'grommet/components/Notification'
-
+import MedSummary from '../components/MedSummary.jsx';
 
 import * as MedData from '../med_data.js'
 
@@ -82,7 +82,8 @@ export default class MedEntry3 extends React.Component {
       ],
       keyMax: 0,
       step: 0,
-      showCompNotification: false
+      showCompNotification: false,
+      continueNotificationText: 'Please select a medication before continuing.'
     }
     this.medListRend = [];
     this.medListChecks = [];
@@ -127,13 +128,17 @@ export default class MedEntry3 extends React.Component {
   }
 
   initDose(medIndex) {
+    var today = new Date();
+
     var dose = {
       key: this.state.keyMax + 1,
       med: medIndex,
       time: null,
       nPills: 0,
-      pillDose: 0
+      pillDose: 0,
+      dateEntered: ((today.getMonth()+1) + '/' + today.getDate() + '/' + today.getFullYear())
     }
+
     this.addDose(dose);
     this.setKeyMax();
   }
@@ -187,23 +192,6 @@ export default class MedEntry3 extends React.Component {
     }
   }
 
-  generateRegimenSummary() {
-    var div = this.state.medList.length >= 1
-      ? this.state.medList.map((med,index) => <div key={index}>
-        <Paragraph>{med.label}</Paragraph>
-        <List className={'home-medlist'}>
-
-          {
-            this.state.doseList.filter(dose => dose.med === med.value).map((dose) => <ListItem key={dose.key}>{dose.nPills}
-              x {dose.pillDose}
-              mg tabs at {dose.time}</ListItem>)
-          }
-        </List>
-      </div>)
-      : <Label className={'warn-text'}>As you enter you medication schedule, it will appear here so that you can review it.</Label>
-    return <Box>{div}</Box>;
-  }
-
   openPillIdentifierTab() {
     window.open('https://pillbox.nlm.nih.gov/pillimage/search.php', '_blank');
   }
@@ -220,25 +208,44 @@ export default class MedEntry3 extends React.Component {
     })
   }
 
+  doseComplete(dose) {
+    return !(dose.time === null || (dose.pillDose === 0 || dose.nPills === 0))
+  }
+
   stepComplete() {
-    switch(this.state.step) {
+    switch (this.state.step) {
       case 0:
         return this.state.medList.length > 0;
+      case 2:
+        return this.state.doseList.every(this.doseComplete)
       default:
         return true;
     }
   }
 
   handleNextClick() {
-    if(this.stepComplete()) {
-      this.setState({showCompNotification:false})
+    if(this.state.step === 3)  {
+      document.location.hash = '/home'
+    }
+    else {
+    if (this.stepComplete()) {
+      this.setState({showCompNotification: false})
       this.nextStep();
+    } else {
+      var newNotificationText = null;
+      switch (this.state.step) {
+        case 0:
+          newNotificationText = 'Please select a medication before continuing.';
+          break;
+        case 2:
+          newNotificationText = 'Please fill in all information before continuing.';
+          break;
+        default:
+          break;
+      }
+      this.setState({showCompNotification: true, continueNotificationText: newNotificationText})
     }
-    else{
-      this.setState({showCompNotification:true})
-
-    }
-
+}
   }
 
   render() {
@@ -250,11 +257,11 @@ export default class MedEntry3 extends React.Component {
 
       <Columns justify={'start'} masonry={true} maxCount={2}>
         <Box size={'xlarge'}>
-          <Box direction={'row'} pad={'medium'} justify={'between'} basis={'full'}>
-            <Button onClick={() => this.lastStep()} label={'Back'}></Button>
-            <Button onClick={() => this.handleNextClick()} label={'Next'}></Button>
-          </Box>
-          {this.state.showCompNotification ? <Notification message='Please select a medication before continuing.' size='small'status='critical'/>:null}
+          {
+            this.state.showCompNotification
+              ? <Notification message={this.state.continueNotificationText} size='small' status='critical'/>
+              : null
+          }
 
           <Animate visible={this.state.step === 0} enter={{
               "animation" : "fade",
@@ -287,18 +294,28 @@ export default class MedEntry3 extends React.Component {
               "delay" : 0
             }} keep={false}>
             <Box justify={'start'} margin={'medium'}>
-            <Title>Enter specifics of each dose:</Title>
-            <Box>
-              {this.generateRegEntryCards()}
+              <Title>Enter specifics of each dose:</Title>
+              <Box>
+                {this.generateRegEntryCards()}
+              </Box>
             </Box>
-          </Box>
           </Animate>
-        </Box>
-        <Box className={'gen-card'} margin={'medium'} pad={'medium'} >
+          <Animate visible={this.state.step === 3} enter={{
+              "animation" : "fade",
+              "duration" : 300,
+              "delay" : 0
+            }} keep={false}>
+            <Box justify={'start'} margin={'medium'}>
+              <MedSummary doseList={this.state.doseList} medList={this.state.medList} updateable={true} updateDose={this.updateDose}></MedSummary>
 
-          <h2>Med Regimen Summary</h2>
-          {this.generateRegimenSummary()}
+            </Box>
+          </Animate>
+          <Box direction={'row'} pad={'medium'} justify={'between'} basis={'full'}>
+            <Button onClick={() => this.lastStep()} label={'Back'}></Button>
+            <Button onClick={() => this.handleNextClick()} label={this.state.step < 3 ? 'Next' : 'Done'}></Button>
+          </Box>
         </Box>
+
       </Columns>
 
     </div>);

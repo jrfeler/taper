@@ -68,7 +68,7 @@ export default class MedSummary extends React.Component {
 
   generateDoseEditor() {
     var row = null;
-    row = (<TableRow>
+    row = (<TableRow >
       <td>
         <DateTime id={this.state.doseIndexToUpdate + 'time'} format='h a' value={this.state.doseToUpdate.time} onChange={(value) => this.updateTime(value, this.state.doseIndexToUpdate)}></DateTime>
       </td>
@@ -98,16 +98,17 @@ export default class MedSummary extends React.Component {
 
   render() {
     var div = (<Box className={'gen-card'} pad={'medium'}>
+    <Label>Regimen last updated {this.state.doseList[0].dateEntered}</Label>
+    <h2>Medication list:</h2>
     {this.props.updateable?<Label>Click on a row to edit information: </Label> : null}
       {
-
-        this.state.medList.map((med, index) => <div key={index}>
+        this.state.medList.map((med, index) => <div key={index} className={'med-item'}>
           <Paragraph>{med.label}</Paragraph>
-          <List className={'home-medlist'}>
+          <List>
             {
               this.state.doseList.filter(dose => dose.med === med.value).map((dose, ind) => <ListItem key={dose.key} onClick={this.props.updateable
                   ? () => this.toggleDoseUpdater(dose, ind)
-                  : null}>{dose.nPills}
+                  : null} justify={'between'} className={'dose-entry'}><span></span>{dose.nPills}
                 x {dose.pillDose}
                 mg tabs at {dose.time}</ListItem>)
             }
@@ -117,7 +118,7 @@ export default class MedSummary extends React.Component {
       {
         this.state.showDoseUpdater
           ? <Layer overlayClose={true} closer={true} onClose={() => this.toggleDoseUpdater()}>
-              <Article>
+              <Article pad={'medium'}>
                 {this.generateDoseEditor()}
               </Article>
             </Layer>
@@ -125,7 +126,7 @@ export default class MedSummary extends React.Component {
       }
     </Box>);
 
-    return <Box>{div}</Box >;
+    return <Box className={'med-summarywe'}>{div}</Box >;
 
   }
 

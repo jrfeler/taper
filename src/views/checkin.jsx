@@ -33,13 +33,15 @@ class Checkin extends React.Component {
         med: 1,
         time: '8 am',
         nPills: 2,
-        pillDose: 10
+        pillDose: 10,
+        dateEntered: '3/14/2018'
       }, {
         key: 2,
         med: 2,
         time: '8 pm',
         nPills: 2,
-        pillDose: 10
+        pillDose: 10,
+        dateEntered: '3/14/2018'
       }
     ];
     var dummyMedList = [
