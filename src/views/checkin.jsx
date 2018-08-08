@@ -27,20 +27,30 @@ class Checkin extends React.Component {
     super(props);
     var context = this;
     var fbData = Tabletop.init({key: 'https://docs.google.com/spreadsheets/d/19CJcyEiSPD4g7boOx6Xk8e6rV9NrJeptqMo-v-uVIzE/edit?usp=sharing', callback: this.readFBDataHelper, simpleSheet: true, callbackContext: context})
-    var dummyDoseList = [{
-      key: 1,
-      med: 1,
-      time: '8 am',
-      nPills: 2,
-      pillDose: 10
-    }, {
-      key: 2,
-      med: 2,
-      time: '8 pm',
-      nPills: 2,
-      pillDose: 10
-    }];
-    var dummyMedList = [{value:1,label:'Hydromorphone'},{value:2,label:'Oxycodone'}];
+    var dummyDoseList = [
+      {
+        key: 1,
+        med: 1,
+        time: '8 am',
+        nPills: 2,
+        pillDose: 10
+      }, {
+        key: 2,
+        med: 2,
+        time: '8 pm',
+        nPills: 2,
+        pillDose: 10
+      }
+    ];
+    var dummyMedList = [
+      {
+        value: 1,
+        label: 'Hydromorphone'
+      }, {
+        value: 2,
+        label: 'Oxycodone'
+      }
+    ];
 
     this.state = {
       showVid: false,
@@ -54,9 +64,9 @@ class Checkin extends React.Component {
       medList: dummyMedList,
       taperDose: null,
       taperRate: -1,
-      pFBText: MedData.positiveFBText[Math.floor(Math.random()*MedData.positiveFBText.length)]
+      pFBText: MedData.positiveFBText[Math.floor(Math.random() * MedData.positiveFBText.length)]
     }
-    this.setFeedbackSwitch = this.setFeedbackSwitch.bind(this);
+    this.toggleCustomFeedbackOptions = this.toggleCustomFeedbackOptions.bind(this);
     this.toggleCustomFeedback = this.toggleCustomFeedback.bind(this);
     this.updateDose = this.updateDose.bind(this);
 
@@ -89,9 +99,10 @@ class Checkin extends React.Component {
     this.setState({doseList: newDoseList})
   }
 
-
-  setFeedbackSwitch(val) {
-    this.setState({fbSwitch: val})
+  toggleCustomFeedbackOptions() {
+    this.setState({
+      showCustomFBOptions: !this.state.showCustomFBOptions
+    })
   }
 
   toggleVidLayer() {
@@ -99,7 +110,6 @@ class Checkin extends React.Component {
       showVid: !this.state.showVid
     });
   }
-
 
   toggleCustomFeedback(ind) {
     var newState = this.state.fbShow;
@@ -109,8 +119,11 @@ class Checkin extends React.Component {
   }
 
   customFB() {
+
     var div = null;
+
     if (this.state.fbText != null) {
+
       div = this.state.fbText.map((fb, index) => (<Box key={index} pad={'medium'} className={'gen-card'} onClick={() => this.toggleCustomFeedback(index)}>
         <Box direction={'row'} justify={'between'}>{fb.prompt}
           <Down/></Box>
@@ -118,9 +131,13 @@ class Checkin extends React.Component {
         {
           this.state.fbShow[index]
             ? <Layer closer={true} onClose={() => this.toggleCustomFeedback(index)}>
-                <Article>
+                <Article pad={'medium'}>
                   <div className={'quote-marker left'}>"</div>
-                  <Paragraph>{
+                  {
+                    fb.vid_id.length > 0
+                      ? <iframe id="ytplayer" type="text/html" width="500" height="280" src={'https://www.youtube.com/embed/' + fb.vid_id} frameBorder="0"></iframe>
+                      : null
+                  }<Paragraph>{
                       fb.feedback.split("\\n").map((p, key) => {
                         return (<span key={key}>{p}<br/></span>)
                       })
@@ -139,33 +156,27 @@ class Checkin extends React.Component {
       <Columns size={'medium'} justify={'start'}>
         {div}
       </Columns>
-    </Box>);
+      <Box direction={'row'} justify={'end'}>
+      <Button box={true} margin={'medium'} primary={true} label={'I have other questions >'} href={'https://www.google.com/'}/>
+      <Button box={true} margin={'medium'} primary={true} plain={true} label={'I am ready to continue tapering >'} onClick={()=>this.nextStep()}/>
+      </Box>
+  </Box>);
 
   }
 
-
-
-  renderFeedback() {
-    switch (this.state.fbSwitch) {
-      case 0:
-        return null;
-      case 1:
-        return (<Box>
-          <Paragraph>OK, according to your tapering plan, you should now decrease your dose to
-            <b>
-              15mg
-            </b>
-            each day.</Paragraph>
-          <Paragraph>
-            Other veterans have done very well decreasing by this amount and we think you will too. You shouldn’t note any problems lowering your dose by this amount. We hope you are benefitting from the wide variety of resources included in the Taper Coach. We will check in with you again in 2 weeks.
-          </Paragraph>
-        </Box>)
-      case 2:
-        return this.customFB();
-      default:
-        return null;
+  renderCustomFeedback() {
+    if (this.state.showCustomFBOptions) {
+      return this.customFB();
+    } else {
+      return (<Box>
+        <Paragraph>
+          Do you have any concerns about continuing to taper your opioid medications?</Paragraph>
+        <Box direction={'row'}>
+          <Button box={true} margin={'medium'} pad={'medium'} primary={true} label={'No'} onClick={() => this.nextStep()}></Button>
+          <Button box={true} margin={'medium'} pad={'medium'} primary={true} label={'Yes'} onClick={() => this.toggleCustomFeedbackOptions()}></Button>
+        </Box>
+      </Box>);
     }
-
   }
 
   toggleCustomFeedback(ind) {
@@ -199,12 +210,12 @@ class Checkin extends React.Component {
           }} keep={false}>
           <Box>
             <Paragraph>This is the medication regimen that was most recently recommended to you:</Paragraph>
-              <MedSummary doseList={this.state.doseList} medList={this.state.medList} updateable={true} updateDose={this.updateDose}></MedSummary>
+            <MedSummary doseList={this.state.doseList} medList={this.state.medList} updateable={true} updateDose={this.updateDose}></MedSummary>
 
-            </Box>
-            <Box alignContent={'end'} alignSelf={'end'}  flex={true} margin={'medium'}>
-              <Button label={'This is a correct list of the medications that I am taking now'} icon={<CaretNext/>} onClick={() => this.nextStep()} primary={true} plain={true}></Button>
-            </Box>
+          </Box>
+          <Box alignContent={'end'} alignSelf={'end'} flex={true} margin={'medium'}>
+            <Button label={'This is a correct list of the medications that I am taking now'} icon={<CaretNext/>} onClick={() => this.nextStep()} primary={true} plain={true}></Button>
+          </Box>
 
         </Animate>
 
@@ -219,21 +230,14 @@ class Checkin extends React.Component {
             : null
         }
 
-
-
         <Animate visible={this.state.step === 1} enter={{
             "animation" : "fade",
             "duration" : 300,
             "delay" : 0
           }} keep={false}>
           <Box>
-            <Paragraph>
-              Do you have any concerns about continuing to slowly taper your opioid medications?</Paragraph>
-            <Box direction={'row'}>
-              <Button label={'No'} onClick={() => this.nextStep()}></Button>
-              <Button label={'Yes'} onClick={() => this.setFeedbackSwitch(2)}></Button>
-            </Box>
-            {this.renderFeedback()}
+
+            {this.renderCustomFeedback()}
           </Box>
         </Animate>
         <Animate visible={this.state.step === 2} enter={{
@@ -249,7 +253,7 @@ class Checkin extends React.Component {
               <RadioButton id={'taper1'} checked={this.state.taperRate === 1} label={'Slow'} onChange={() => this.setTaperRate(1)}/>
               <RadioButton id={'taper2'} checked={this.state.taperRate === 2} label={'Slower'} onChange={() => this.setTaperRate(2)}/>
             </Box>
-            <Button label={'Next'} icon={<CaretNext/>} onClick={()=>this.nextStep()}/>
+            <Button label={'Next'} icon={<CaretNext/>} onClick={() => this.nextStep()}/>
           </Box>
 
         </Animate>
@@ -260,11 +264,17 @@ class Checkin extends React.Component {
           }} keep={false}>
           <Box>
             <Paragraph>{this.state.pFBText}</Paragraph>
-            {this.state.taperDose != null ? <Paragraph>You should reduce your {this.state.taperDose.time} dose of {MedData.drugData[this.state.taperDose.med]} to {this.state.taperDose.nPills * this.state.taperDose.pillDose * .8} mg.</Paragraph> : null}
+            {
+              this.state.taperDose != null
+                ? <Paragraph>You should reduce your {this.state.taperDose.time}
+                    dose of {MedData.drugData[this.state.taperDose.med]}
+                    to {this.state.taperDose.nPills * this.state.taperDose.pillDose * .8}
+                    mg.</Paragraph>
+                : null
+            }
+            <Paragraph>Let's check in again in 2 weeks.</Paragraph>
           </Box>
-
         </Animate>
-
       </Box>
     </div>);
   }
